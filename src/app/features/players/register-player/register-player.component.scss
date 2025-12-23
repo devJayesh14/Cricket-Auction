@@ -1,0 +1,24 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+::ng-deep .p-card {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+::ng-deep .p-inputtext,
+::ng-deep .p-inputnumber,
+::ng-deep .p-dropdown {
+  width: 100%;
+}
+
+::ng-deep .p-fileupload-basic {
+  width: 100%;
+}
+
+::ng-deep .p-fileupload-basic .p-button {
+  width: 100%;
+}
+

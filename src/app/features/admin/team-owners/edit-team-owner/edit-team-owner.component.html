@@ -1,0 +1,128 @@
+<div class="edit-team-owner-container min-vh-100 bg-light">
+  <app-header></app-header>
+
+  <div class="container-fluid py-5">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1 class="h2 fw-bold mb-2">Edit Team Owner</h1>
+          <p class="text-muted mb-0">Update team owner information</p>
+        </div>
+        <button class="btn btn-outline-secondary" (click)="router.navigate(['/admin/team-owners/list'])">
+          <i class="bi bi-arrow-left me-2"></i>Back to Team Owners
+        </button>
+      </div>
+
+      <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white">
+          <h2 class="h4 mb-0 fw-bold">Team Owner Information</h2>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+          @if (isLoading && !editForm.value.name) {
+            <div class="text-center py-5">
+              <div class="spinner-border text-primary" role="status"></div>
+              <p class="text-muted mt-3">Loading team owner details...</p>
+            </div>
+          } @else {
+            <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+              <!-- Name Field -->
+              <div class="mb-4">
+                <label for="name" class="form-label fw-semibold">
+                  Full Name <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-person"></i></span>
+                  <input
+                    id="name"
+                    type="text"
+                    formControlName="name"
+                    placeholder="Enter team owner full name"
+                    class="form-control"
+                    [class.is-invalid]="name?.invalid && name?.touched"
+                  />
+                </div>
+                @if (name?.invalid && name?.touched) {
+                  <div class="invalid-feedback d-block">
+                    @if (name?.errors?.['required']) {
+                      Name is required
+                    } @else if (name?.errors?.['minlength']) {
+                      Name must be at least 2 characters long
+                    }
+                  </div>
+                }
+              </div>
+
+              <!-- Email Field -->
+              <div class="mb-4">
+                <label for="email" class="form-label fw-semibold">
+                  Email Address <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                  <input
+                    id="email"
+                    type="email"
+                    formControlName="email"
+                    placeholder="Enter team owner email"
+                    class="form-control"
+                    [class.is-invalid]="email?.invalid && email?.touched"
+                  />
+                </div>
+                @if (email?.invalid && email?.touched) {
+                  <div class="invalid-feedback d-block">
+                    @if (email?.errors?.['required']) {
+                      Email is required
+                    } @else if (email?.errors?.['email']) {
+                      Please enter a valid email address
+                    }
+                  </div>
+                }
+              </div>
+
+              <!-- Team Selection -->
+              <div class="mb-4">
+                <label for="teamId" class="form-label fw-semibold">Team</label>
+                <select
+                  id="teamId"
+                  formControlName="teamId"
+                  class="form-select"
+                >
+                  <option value="">No Team Assigned</option>
+                  @for (team of teams; track team._id) {
+                    <option [value]="team._id">{{ team.name }} ({{ team.shortName }})</option>
+                  }
+                </select>
+              </div>
+
+              <!-- Submit Buttons -->
+              <div class="d-flex flex-column flex-md-row gap-3 pt-4 mt-4 border-top">
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-lg flex-fill"
+                  [disabled]="editForm.invalid || isLoading"
+                >
+                  @if (isLoading) {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  } @else {
+                    <i class="bi bi-check-circle me-2"></i>
+                  }
+                  Update Team Owner
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-lg flex-fill"
+                  [disabled]="isLoading"
+                  (click)="router.navigate(['/admin/team-owners/list'])"
+                >
+                  <i class="bi bi-x-circle me-2"></i>Cancel
+                </button>
+              </div>
+            </form>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

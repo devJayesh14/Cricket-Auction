@@ -1,0 +1,98 @@
+<div class="list-team-owners-container min-vh-100 bg-light">
+  <app-header></app-header>
+
+  <div class="container-fluid px-4 py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="h2 fw-bold mb-2">Manage Team Owners</h1>
+        <p class="text-muted mb-0">View, edit, and delete team owner accounts</p>
+      </div>
+      <button class="btn btn-secondary" (click)="router.navigate(['/admin/register-team-owner'])">
+        <i class="bi bi-plus-circle me-2"></i>Add New Team Owner
+      </button>
+    </div>
+
+    @if (isLoading) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="text-muted mt-3">Loading team owners...</p>
+      </div>
+    } @else if (teamOwners.length === 0) {
+      <div class="text-center py-5 bg-white rounded shadow-sm">
+        <i class="bi bi-person-x display-1 text-muted mb-3"></i>
+        <h3 class="h4 mb-2">No Team Owners Found</h3>
+        <p class="text-muted mb-4">Register your first team owner to get started</p>
+        <button class="btn btn-secondary" (click)="router.navigate(['/admin/register-team-owner'])">
+          <i class="bi bi-plus-circle me-2"></i>Add Team Owner
+        </button>
+      </div>
+    } @else {
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Team</th>
+                  <th>Status</th>
+                  <th>Created At</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (owner of teamOwners; track owner._id) {
+                  <tr>
+                    <td><strong>{{ owner.name }}</strong></td>
+                    <td>{{ owner.email }}</td>
+                    <td>
+                      @if (owner.team && owner.team.name) {
+                        <span class="badge bg-info">
+                          {{ owner.team.name }}
+                        </span>
+                      } @else if (owner.teamId) {
+                        <span class="badge bg-info">
+                          Team Assigned
+                        </span>
+                      } @else {
+                        <span class="badge bg-secondary">No Team</span>
+                      }
+                    </td>
+                    <td>
+                      @if (owner.isActive) {
+                        <span class="badge bg-success">Active</span>
+                      } @else {
+                        <span class="badge bg-danger">Inactive</span>
+                      }
+                    </td>
+                    <td>{{ formatDate(owner.createdAt || '') }}</td>
+                    <td>
+                      <div class="d-flex gap-2">
+                        <button 
+                          class="btn btn-sm btn-outline-primary" 
+                          (click)="editTeamOwner(owner._id!)"
+                          title="Edit Team Owner"
+                        >
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button 
+                          class="btn btn-sm btn-outline-danger" 
+                          (click)="deleteTeamOwner(owner)"
+                          title="Delete Team Owner"
+                        >
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+

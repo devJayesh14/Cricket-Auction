@@ -1,0 +1,100 @@
+<div class="list-teams-container min-vh-100 bg-light">
+  <app-header></app-header>
+
+  <div class="container-fluid px-3 px-md-4 py-3 py-md-5">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-3 mb-md-4">
+      <div>
+        <h1 class="h2 fw-bold mb-2">Manage Teams</h1>
+        <p class="text-muted mb-0">View, edit, and delete teams</p>
+      </div>
+      <button class="btn btn-primary" (click)="router.navigate(['/admin/teams/create'])">
+        <i class="bi bi-plus-circle me-2"></i>Add New Team
+      </button>
+    </div>
+
+    @if (isLoading) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="text-muted mt-3">Loading teams...</p>
+      </div>
+    } @else if (teams.length === 0) {
+      <div class="text-center py-5 bg-white rounded shadow-sm">
+        <i class="bi bi-people display-1 text-muted mb-3"></i>
+        <h3 class="h4 mb-2">No Teams Found</h3>
+        <p class="text-muted mb-4">Create your first team to get started</p>
+        <button class="btn btn-primary" (click)="router.navigate(['/admin/teams/create'])">
+          <i class="bi bi-plus-circle me-2"></i>Add Team
+        </button>
+      </div>
+    } @else {
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Logo</th>
+                  <th>Name</th>
+                  <th>Short Name</th>
+                  <th>Budget</th>
+                  <th>Remaining</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (team of teams; track team._id) {
+                  <tr>
+                    <td>
+                      @if (team.logo) {
+                        <img 
+                          [src]="getLogoUrl(team.logo)" 
+                          [alt]="team.name"
+                          class="rounded"
+                          style="width: 50px; height: 50px; object-fit: cover;"
+                          (error)="onImageError($event)"
+                        />
+                      } @else {
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                          <i class="bi bi-people text-white"></i>
+                        </div>
+                      }
+                    </td>
+                    <td><strong>{{ team.name }}</strong></td>
+                    <td><span class="badge bg-info">{{ team.shortName }}</span></td>
+                    <td><strong class="text-success">{{ formatCurrency(team.budget) }}</strong></td>
+                    <td><strong class="text-primary">{{ formatCurrency(team.remainingBudget || team.budget) }}</strong></td>
+                    <td>
+                      <span class="badge bg-{{ getStatusBadgeClass(team.status || 'active') }}">
+                        {{ (team.status || 'active') | titlecase }}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="d-flex gap-2">
+                        <button 
+                          class="btn btn-sm btn-outline-primary" 
+                          (click)="editTeam(team._id!)"
+                          title="Edit Team"
+                        >
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button 
+                          class="btn btn-sm btn-outline-danger" 
+                          (click)="deleteTeam(team)"
+                          title="Delete Team"
+                        >
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+

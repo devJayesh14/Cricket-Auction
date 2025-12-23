@@ -1,0 +1,243 @@
+<div class="container-fluid py-3 py-md-5 min-vh-100">
+  <div class="container px-3 px-md-4">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+      <div class="d-flex align-items-center gap-3 mb-3 mb-md-0">
+        <button class="btn btn-outline-secondary" (click)="goBack()">
+          <i class="bi bi-arrow-left me-2"></i>Back
+        </button>
+        <div>
+          <h1 class="h3 h2-md mb-1 fw-bold">My Team</h1>
+          @if (team) {
+            <p class="text-muted mb-0">{{ team.name }} ({{ team.shortName }})</p>
+          }
+        </div>
+      </div>
+    </div>
+
+    @if (isLoading) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    } @else if (team) {
+      <!-- Team Info Card -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-12 col-md-3 text-center mb-3 mb-md-0">
+              @if (team.logo) {
+                <img 
+                  [src]="getLogoUrl(team.logo)" 
+                  [alt]="team.name"
+                  class="team-logo"
+                  (error)="onImageError($event)"
+                />
+              } @else {
+                <div class="team-logo-placeholder">
+                  <i class="bi bi-people-fill"></i>
+                </div>
+              }
+            </div>
+            <div class="col-12 col-md-9">
+              <div class="row g-3">
+                <div class="col-6 col-md-3">
+                  <div class="stat-card">
+                    <div class="stat-label">Total Players</div>
+                    <div class="stat-value">{{ players.length }}</div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="stat-card">
+                    <div class="stat-label">Budget</div>
+                    <div class="stat-value">₹{{ team.budget | number }}</div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="stat-card">
+                    <div class="stat-label">Spent</div>
+                    <div class="stat-value text-warning">₹{{ team.spent | number }}</div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="stat-card">
+                    <div class="stat-label">Remaining</div>
+                    <div class="stat-value text-success">₹{{ team.remainingBudget | number }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View Toggle -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+          <div class="btn-group" role="group">
+            <button 
+              type="button" 
+              class="btn"
+              [class.btn-primary]="viewMode === 'by-event'"
+              [class.btn-outline-primary]="viewMode !== 'by-event'"
+              (click)="viewMode = 'by-event'"
+            >
+              <i class="bi bi-calendar-event me-2"></i>View by Event
+            </button>
+            <button 
+              type="button" 
+              class="btn"
+              [class.btn-primary]="viewMode === 'all'"
+              [class.btn-outline-primary]="viewMode !== 'all'"
+              (click)="viewMode = 'all'"
+            >
+              <i class="bi bi-list-ul me-2"></i>View All Players
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event-wise Players View -->
+      @if (viewMode === 'by-event') {
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-header bg-primary text-white">
+            <h2 class="h5 mb-0 fw-bold">
+              <i class="bi bi-calendar-event me-2"></i>Players by Event
+            </h2>
+          </div>
+          <div class="card-body">
+            @if (isLoadingEventWise) {
+              <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            } @else if (eventWisePlayers.length === 0) {
+              <div class="text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+                <p class="text-muted mt-3">No players purchased in any event yet.</p>
+              </div>
+            } @else {
+              @for (eventGroup of eventWisePlayers; track eventGroup.eventId) {
+                <div class="mb-4 pb-4 border-bottom">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                      <h3 class="h5 fw-bold mb-1">{{ eventGroup.eventName }}</h3>
+                      <small class="text-muted">
+                        <i class="bi bi-calendar me-1"></i>
+                        {{ eventGroup.eventStartDate | date: 'medium' }}
+                        <span class="badge ms-2" [class.bg-success]="eventGroup.eventStatus === 'completed'" 
+                              [class.bg-warning]="eventGroup.eventStatus === 'live'"
+                              [class.bg-secondary]="eventGroup.eventStatus !== 'completed' && eventGroup.eventStatus !== 'live'">
+                          {{ eventGroup.eventStatus }}
+                        </span>
+                      </small>
+                    </div>
+                    <div class="text-end">
+                      <div class="fw-bold text-primary">₹{{ eventGroup.totalSpent | number }}</div>
+                      <small class="text-muted">{{ eventGroup.players.length }} player(s)</small>
+                    </div>
+                  </div>
+                  <div class="row g-3">
+                    @for (player of eventGroup.players; track player._id) {
+                      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                        <div class="player-card">
+                          @if (player.photo) {
+                            <img 
+                              [src]="getLogoUrl(player.photo)" 
+                              [alt]="player.name"
+                              class="player-photo"
+                              (error)="onImageError($event)"
+                            />
+                          } @else {
+                            <div class="player-photo-placeholder">
+                              <i class="bi bi-person-fill"></i>
+                            </div>
+                          }
+                          <div class="player-info">
+                            <h5 class="player-name">{{ player.name }}</h5>
+                            <div class="player-details">
+                              <span class="badge bg-primary">{{ player.role }}</span>
+                              <span class="player-price text-success fw-bold">₹{{ player.soldPrice | number }}</span>
+                            </div>
+                            <small class="text-muted d-block mt-1">
+                              <i class="bi bi-clock me-1"></i>
+                              Purchased: {{ player.purchasedAt | date: 'short' }}
+                            </small>
+                            @if (player.age) {
+                              <small class="text-muted d-block">Age: {{ player.age }}</small>
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        </div>
+      }
+
+      <!-- All Players View -->
+      @if (viewMode === 'all') {
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-primary text-white">
+            <h2 class="h5 mb-0 fw-bold">
+              <i class="bi bi-people me-2"></i>All Team Players ({{ players.length }})
+            </h2>
+          </div>
+          <div class="card-body">
+            @if (players.length === 0) {
+              <div class="text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+                <p class="text-muted mt-3">No players in your team yet.</p>
+              </div>
+            } @else {
+              <div class="row g-3">
+                @for (player of players; track player._id) {
+                  <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="player-card">
+                      @if (player.photo) {
+                        <img 
+                          [src]="getLogoUrl(player.photo)" 
+                          [alt]="player.name"
+                          class="player-photo"
+                          (error)="onImageError($event)"
+                        />
+                      } @else {
+                        <div class="player-photo-placeholder">
+                          <i class="bi bi-person-fill"></i>
+                        </div>
+                      }
+                      <div class="player-info">
+                        <h5 class="player-name">{{ player.name }}</h5>
+                        <div class="player-details">
+                          <span class="badge bg-primary">{{ player.role }}</span>
+                          @if (player.soldPrice) {
+                            <span class="player-price">₹{{ player.soldPrice | number }}</span>
+                          } @else {
+                            <span class="player-price">₹{{ player.basePrice | number }}</span>
+                          }
+                        </div>
+                        @if (player.age) {
+                          <small class="text-muted">Age: {{ player.age }}</small>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+    } @else {
+      <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle me-2"></i>No team assigned to your account.
+      </div>
+    }
+  </div>
+</div>
+

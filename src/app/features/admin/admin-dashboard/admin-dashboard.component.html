@@ -1,0 +1,136 @@
+<div class="admin-dashboard-container min-vh-100" style="position: relative; z-index: 1;">
+  <app-header></app-header>
+  
+  <!-- Header Section -->
+  <div class="bg-white border-bottom shadow-sm">
+    <div class="container-fluid px-4 py-4">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+        <div>
+          <h1 class="h2 fw-bold mb-1">Admin Dashboard</h1>
+          <p class="text-muted mb-0">Welcome back, <span class="fw-semibold text-primary">{{ currentUser?.name }}</span>!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <div class="container-fluid px-3 px-md-4 py-3 py-md-5">
+    <!-- Admin Actions Grid -->
+    <div class="row g-3 g-md-4">
+      <!-- Create Event -->
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-header bg-gradient text-white p-4" style="background: linear-gradient(to right, #3b82f6, #6366f1);">
+            <div class="d-flex align-items-center gap-3">
+              <div class="bg-white bg-opacity-20 rounded p-2">
+                <i class="bi bi-calendar-plus fs-4"></i>
+              </div>
+              <div>
+                <h5 class="card-title mb-0 fw-bold">Manage Events</h5>
+                <small class="opacity-75">Create and manage events</small>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="text-muted small mb-3">Create and manage new cricket auction events with customizable settings and player selection.</p>
+            <div class="d-flex gap-2">
+              <button class="btn btn-primary flex-fill" (click)="router.navigate(['/admin/events/create'])">
+                <i class="bi bi-plus-circle me-2"></i>Create Event
+              </button>
+              <button class="btn btn-outline-primary" (click)="router.navigate(['/admin/events/list'])">
+                <i class="bi bi-list-ul"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manage Players -->
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-header bg-gradient text-white p-4" style="background: linear-gradient(to right, #10b981, #059669);">
+            <div class="d-flex align-items-center gap-3">
+              <div class="bg-white bg-opacity-20 rounded p-2">
+                <i class="bi bi-people fs-4"></i>
+              </div>
+              <div>
+                <h5 class="card-title mb-0 fw-bold">Manage Players</h5>
+                <small class="opacity-75">Add and update players</small>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="text-muted small mb-3">Register new players, update their information, and manage player profiles for auctions.</p>
+            <div class="d-flex flex-wrap gap-2">
+              <button class="btn btn-success flex-fill" (click)="router.navigate(['/players/register'])">
+                <i class="bi bi-person-plus me-2"></i>Add Player
+              </button>
+              <button class="btn btn-outline-success" (click)="router.navigate(['/admin/players/list'])">
+                <i class="bi bi-list-ul"></i>
+              </button>
+              <button class="btn btn-outline-primary" (click)="router.navigate(['/admin/players/sold'])">
+                <i class="bi bi-trophy"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Register Team Owner -->
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-header bg-gradient text-white p-4" style="background: linear-gradient(to right, #9333ea, #ec4899);">
+            <div class="d-flex align-items-center gap-3">
+              <div class="bg-white bg-opacity-20 rounded p-2">
+                <i class="bi bi-person-badge fs-4"></i>
+              </div>
+              <div>
+                <h5 class="card-title mb-0 fw-bold">Manage Team Owners</h5>
+                <small class="opacity-75">Create and manage team owners</small>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="text-muted small mb-3">Register and manage team owner accounts to participate in auctions.</p>
+            <div class="d-flex gap-2">
+              <button class="btn btn-secondary flex-fill" (click)="router.navigate(['/admin/register-team-owner'])">
+                <i class="bi bi-person-plus me-2"></i>Add Owner
+              </button>
+              <button class="btn btn-outline-secondary" (click)="router.navigate(['/admin/team-owners/list'])">
+                <i class="bi bi-list-ul"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manage Teams -->
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-header bg-gradient text-white p-4" style="background: linear-gradient(to right, #f59e0b, #ea580c);">
+            <div class="d-flex align-items-center gap-3">
+              <div class="bg-white bg-opacity-20 rounded p-2">
+                <i class="bi bi-trophy fs-4"></i>
+              </div>
+              <div>
+                <h5 class="card-title mb-0 fw-bold">Manage Teams</h5>
+                <small class="opacity-75">Create and manage teams</small>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="text-muted small mb-3">Create teams, upload logos, set budgets, and manage team details for auctions.</p>
+            <div class="d-flex gap-2">
+              <button class="btn btn-warning flex-fill" (click)="router.navigate(['/admin/teams/create'])">
+                <i class="bi bi-plus-circle me-2"></i>Add Team
+              </button>
+              <button class="btn btn-outline-warning" (click)="router.navigate(['/admin/teams/list'])">
+                <i class="bi bi-list-ul"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

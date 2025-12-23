@@ -1,0 +1,119 @@
+@if (showAnimation && (soldData || unsoldData)) {
+  <div class="animation-overlay" (click)="hideAnimation()">
+    <div class="animation-container" (click)="$event.stopPropagation()">
+      @if (soldData) {
+        <!-- Player Sold Animation -->
+        <div class="sold-animation">
+          <div class="animation-header">
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <h2 class="animation-title sold-title">
+              <i class="bi bi-trophy-fill me-2"></i>PLAYER SOLD!
+            </h2>
+          </div>
+          
+          <div class="animation-content">
+            <!-- Player Info -->
+            <div class="player-section">
+              @if (soldData.player.photo) {
+                <img 
+                  [src]="'http://localhost:3000/' + soldData.player.photo" 
+                  [alt]="soldData.player.name"
+                  class="player-image"
+                />
+              } @else {
+                <div class="player-image-placeholder">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+              }
+              <h3 class="player-name">{{ soldData.player.name }}</h3>
+              <p class="player-role">{{ soldData.player.role | titlecase }}</p>
+              <div class="bid-amount">
+                <span class="amount-label">Sold For</span>
+                <span class="amount-value">₹{{ soldData.bidAmount | number }}</span>
+              </div>
+            </div>
+
+            <!-- Arrow/To -->
+            <div class="arrow-section">
+              <i class="bi bi-arrow-right"></i>
+            </div>
+
+            <!-- Team & Owner Info -->
+            <div class="team-section">
+              @if (soldData.team.logo) {
+                <img 
+                  [src]="'http://localhost:3000/' + soldData.team.logo" 
+                  [alt]="soldData.team.name"
+                  class="team-logo"
+                />
+              } @else {
+                <div class="team-logo-placeholder">
+                  <i class="bi bi-flag-fill"></i>
+                </div>
+              }
+              <h3 class="team-name">{{ soldData.team.name }}</h3>
+              <p class="team-short-name">{{ soldData.team.shortName }}</p>
+              @if (soldData.owner) {
+                <div class="owner-info">
+                  @if (soldData.owner.photo) {
+                    <img 
+                      [src]="'http://localhost:3000/' + soldData.owner.photo" 
+                      [alt]="soldData.owner.name"
+                      class="owner-image"
+                    />
+                  } @else {
+                    <div class="owner-image-placeholder">
+                      <i class="bi bi-person-circle"></i>
+                    </div>
+                  }
+                  <p class="owner-name">{{ soldData.owner.name }}</p>
+                </div>
+              }
+            </div>
+          </div>
+
+          <button class="close-btn" (click)="hideAnimation()">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+      } @else if (unsoldData) {
+        <!-- Player Unsold Animation -->
+        <div class="unsold-animation">
+          <div class="animation-header">
+            <h2 class="animation-title unsold-title">
+              <i class="bi bi-x-circle-fill me-2"></i>PLAYER UNSOLD
+            </h2>
+          </div>
+          
+          <div class="animation-content">
+            <div class="player-section">
+              @if (unsoldData.player.photo) {
+                <img 
+                  [src]="'http://localhost:3000/' + unsoldData.player.photo" 
+                  [alt]="unsoldData.player.name"
+                  class="player-image"
+                />
+              } @else {
+                <div class="player-image-placeholder">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+              }
+              <h3 class="player-name">{{ unsoldData.player.name }}</h3>
+              <p class="player-role">{{ unsoldData.player.role | titlecase }}</p>
+              <div class="unsold-badge">
+                <i class="bi bi-x-circle me-2"></i>No Bids Received
+              </div>
+            </div>
+          </div>
+
+          <button class="close-btn" (click)="hideAnimation()">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+}
+

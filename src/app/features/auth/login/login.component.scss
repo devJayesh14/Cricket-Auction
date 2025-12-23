@@ -1,0 +1,28 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+::ng-deep .p-card {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+::ng-deep .p-inputtext,
+::ng-deep .p-password input {
+  width: 100%;
+  padding: 0.75rem;
+}
+
+::ng-deep .p-password {
+  width: 100%;
+}
+
+::ng-deep .p-input-icon-left > i {
+  left: 1rem;
+}
+
+::ng-deep .p-input-icon-left > input {
+  padding-left: 2.5rem;
+}
+

@@ -1,0 +1,111 @@
+<div class="list-events-container min-vh-100 bg-light">
+  <app-header></app-header>
+
+  <div class="container-fluid px-4 py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="h2 fw-bold mb-2">Manage Events</h1>
+        <p class="text-muted mb-0">View, edit, and delete auction events</p>
+      </div>
+      <button class="btn btn-primary" (click)="router.navigate(['/admin/events/create'])">
+        <i class="bi bi-plus-circle me-2"></i>Create New Event
+      </button>
+    </div>
+
+    @if (isLoading) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="text-muted mt-3">Loading events...</p>
+      </div>
+    } @else if (events.length === 0) {
+      <div class="text-center py-5 bg-white rounded shadow-sm">
+        <i class="bi bi-calendar-x display-1 text-muted mb-3"></i>
+        <h3 class="h4 mb-2">No Events Found</h3>
+        <p class="text-muted mb-4">Create your first event to get started</p>
+        <button class="btn btn-primary" (click)="router.navigate(['/admin/events/create'])">
+          <i class="bi bi-plus-circle me-2"></i>Create Event
+        </button>
+      </div>
+    } @else {
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Name</th>
+                  <th>Status</th>
+                  <th>Start Date</th>
+                  <th>Players</th>
+                  <th>Description</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (event of events; track event._id) {
+                  <tr>
+                    <td>
+                      <strong>{{ event.name }}</strong>
+                    </td>
+                    <td>
+                      <span class="badge bg-{{ getStatusBadgeClass(event.status) }}">
+                        {{ event.status | titlecase }}
+                      </span>
+                    </td>
+                    <td>{{ formatDate(event.startDate) }}</td>
+                    <td>
+                      <span class="badge bg-info">
+                        {{ (event.players && event.players.length) || 0 }} players
+                      </span>
+                    </td>
+                    <td>
+                      <small class="text-muted">
+                        {{ event.description || 'No description' | truncate: 50 }}
+                      </small>
+                    </td>
+                    <td>
+                      <div class="d-flex gap-2">
+                        <button 
+                          class="btn btn-sm btn-outline-primary" 
+                          (click)="editEvent(event._id!)"
+                          title="Edit Event"
+                        >
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button 
+                          class="btn btn-sm btn-outline-danger" 
+                          (click)="deleteEvent(event)"
+                          [disabled]="event.status === 'live'"
+                          title="Delete Event"
+                        >
+                          <i class="bi bi-trash"></i>
+                        </button>
+                        @if (event.status === 'live') {
+                          <button 
+                            class="btn btn-sm btn-success" 
+                            (click)="router.navigate([`/events/${event._id}/live`])"
+                            title="View Live Auction"
+                          >
+                            <i class="bi bi-broadcast"></i>
+                          </button>
+                        }
+                        <button 
+                          class="btn btn-sm btn-outline-info" 
+                          (click)="viewSoldPlayers(event._id!)"
+                          title="View Sold Players"
+                        >
+                          <i class="bi bi-people-fill"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+

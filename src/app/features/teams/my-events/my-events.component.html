@@ -1,0 +1,170 @@
+<div class="container-fluid py-3 py-md-5 min-vh-100 bg-light">
+  <app-header></app-header>
+  
+  <div class="container px-3 px-md-4">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+      <div class="d-flex align-items-center gap-3 mb-3 mb-md-0">
+        <button class="btn btn-outline-secondary" (click)="goBack()">
+          <i class="bi bi-arrow-left me-2"></i>Back
+        </button>
+        <div>
+          <h1 class="h3 h2-md mb-1 fw-bold">My Events</h1>
+          <p class="text-muted mb-0">Events where you have purchased players</p>
+        </div>
+      </div>
+    </div>
+
+    @if (isLoading) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="text-muted mt-3">Loading your events...</p>
+      </div>
+    } @else if (events.length === 0) {
+      <div class="card shadow-sm border-0">
+        <div class="card-body text-center py-5">
+          <i class="bi bi-calendar-x display-1 text-muted mb-3"></i>
+          <h3 class="h4 mb-2">No Events Found</h3>
+          <p class="text-muted mb-4">You haven't purchased any players in any events yet.</p>
+          <button class="btn btn-primary" (click)="router.navigate(['/events'])">
+            <i class="bi bi-calendar-event me-2"></i>Browse Events
+          </button>
+        </div>
+      </div>
+    } @else {
+      <div class="row g-4">
+        @for (event of events; track event._id) {
+          <div class="col-12">
+            <div class="card shadow-sm border-0">
+              <div class="card-header bg-white border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="flex-grow-1">
+                    <h5 class="card-title mb-1 fw-bold">{{ event.name }}</h5>
+                    <small class="text-muted">{{ event.description || 'No description available' }}</small>
+                  </div>
+                  <span class="badge bg-{{ getStatusBadgeClass(event.status) }} ms-3">
+                    {{ event.status | titlecase }}
+                  </span>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="row mb-3">
+                  <div class="col-12 col-md-3">
+                    <div class="d-flex justify-content-between mb-2">
+                      <span class="text-muted small">Start Date:</span>
+                      <span class="small fw-semibold">{{ formatDate(event.startDate) }}</span>
+                    </div>
+                  </div>
+                  @if (event.endDate) {
+                    <div class="col-12 col-md-3">
+                      <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted small">End Date:</span>
+                        <span class="small fw-semibold">{{ formatDate(event.endDate) }}</span>
+                      </div>
+                    </div>
+                  }
+                  <div class="col-12 col-md-3">
+                    <div class="d-flex justify-content-between mb-2">
+                      <span class="text-muted small">Players Purchased:</span>
+                      <span class="small fw-semibold text-success">{{ event.teamStats.playersPurchased }}</span>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-3">
+                    <div class="d-flex justify-content-between mb-2">
+                      <span class="text-muted small">Total Spent:</span>
+                      <span class="small fw-semibold text-primary">₹{{ event.teamStats.totalSpent | number }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Players List (Expandable) -->
+                @if (getPlayersForEvent(event._id).length > 0) {
+                  <div class="mt-3">
+                    <button 
+                      class="btn btn-sm btn-outline-primary w-100" 
+                      (click)="toggleEvent(event._id)"
+                      type="button"
+                    >
+                      @if (isEventExpanded(event._id)) {
+                        <i class="bi bi-chevron-up me-2"></i>Hide Players
+                      } @else {
+                        <i class="bi bi-chevron-down me-2"></i>Show Purchased Players ({{ getPlayersForEvent(event._id).length }})
+                      }
+                    </button>
+                    
+                    @if (isEventExpanded(event._id)) {
+                      <div class="mt-3 pt-3 border-top">
+                        <h6 class="fw-bold mb-3">Players Purchased in This Event:</h6>
+                        <div class="row g-3">
+                          @for (player of getPlayersForEvent(event._id); track player._id) {
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                              <div class="card border h-100">
+                                <div class="card-body p-3">
+                                  @if (player.photo) {
+                                    <div class="text-center mb-2">
+                                      <img 
+                                        [src]="getLogoUrl(player.photo)" 
+                                        [alt]="player.name"
+                                        class="rounded"
+                                        style="width: 60px; height: 60px; object-fit: cover;"
+                                        (error)="onImageError($event)"
+                                      />
+                                    </div>
+                                  } @else {
+                                    <div class="text-center mb-2">
+                                      <div class="bg-secondary rounded d-flex align-items-center justify-content-center mx-auto" style="width: 60px; height: 60px;">
+                                        <i class="bi bi-person text-white fs-4"></i>
+                                      </div>
+                                    </div>
+                                  }
+                                  <h6 class="card-title text-center mb-2 fw-bold">{{ player.name }}</h6>
+                                  <div class="text-center mb-2">
+                                    <span class="badge bg-primary">{{ player.role }}</span>
+                                  </div>
+                                  <div class="text-center">
+                                    <div class="text-success fw-bold">₹{{ player.soldPrice | number }}</div>
+                                    <small class="text-muted d-block mt-1">
+                                      <i class="bi bi-clock me-1"></i>
+                                      {{ player.purchasedAt | date: 'short' }}
+                                    </small>
+                                    @if (player.age) {
+                                      <small class="text-muted">Age: {{ player.age }}</small>
+                                    }
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+              <div class="card-footer bg-white border-top">
+                <div class="d-flex gap-2">
+                  @if (event.status === 'live') {
+                    <button class="btn btn-danger btn-sm flex-fill" (click)="viewEvent(event._id)">
+                      <i class="bi bi-circle-fill me-1" style="font-size: 0.5rem;"></i>Join Live Auction
+                    </button>
+                  } @else if (event.status !== 'completed') {
+                    <button class="btn btn-primary btn-sm flex-fill" (click)="viewEvent(event._id)">
+                      <i class="bi bi-eye me-1"></i>View Event
+                    </button>
+                  } @else {
+                    <div class="text-center text-muted small py-2 flex-fill">
+                      <i class="bi bi-check-circle me-1"></i>Event Completed
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
+

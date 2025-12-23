@@ -1,0 +1,99 @@
+<div class="login-container min-h-screen d-flex align-items-center justify-content-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-5 px-3">
+  <div class="w-100" style="max-width: 400px;">
+    <!-- Logo/Header -->
+    <div class="text-center mb-5">
+      <div class="d-inline-flex align-items-center justify-content-center rounded-3 shadow-lg mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);">
+        <i class="bi bi-cart text-white" style="font-size: 2.5rem;"></i>
+      </div>
+      <h1 class="fw-bold mb-2" style="font-size: 3rem; background: linear-gradient(to right, #3b82f6, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+        Cricket Auction
+      </h1>
+      <p class="text-secondary">Sign in to your account</p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="card shadow-lg border-0">
+      <div class="card-header bg-gradient text-white p-4" style="background: linear-gradient(to right, #3b82f6, #6366f1);">
+        <h2 class="h4 fw-bold text-center mb-1">Welcome Back</h2>
+        <p class="text-center mb-0 small opacity-75">Sign in to continue</p>
+      </div>
+
+      <div class="card-body p-4">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <!-- Email Field -->
+          <div class="mb-4">
+            <label for="email" class="form-label fw-semibold">Email Address</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light">
+                <i class="bi bi-envelope text-secondary"></i>
+              </span>
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                class="form-control"
+                [class.is-invalid]="email?.invalid && email?.touched"
+                [class.is-valid]="email?.valid && email?.touched"
+                placeholder="Enter your email"
+              />
+            </div>
+            @if (email?.invalid && email?.touched) {
+              <div class="invalid-feedback d-block">
+                @if (email?.errors?.['required']) {
+                  Email is required
+                } @else if (email?.errors?.['email']) {
+                  Please enter a valid email address
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Password Field -->
+          <div class="mb-4">
+            <label for="password" class="form-label fw-semibold">Password</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light">
+                <i class="bi" [class.bi-eye]="showPassword" [class.bi-eye-slash]="!showPassword" (click)="togglePasswordVisibility()" style="cursor: pointer;"></i>
+              </span>
+              <input
+                id="password"
+                [type]="showPassword ? 'text' : 'password'"
+                formControlName="password"
+                class="form-control"
+                [class.is-invalid]="password?.invalid && password?.touched"
+                [class.is-valid]="password?.valid && password?.touched"
+                placeholder="Enter your password"
+              />
+            </div>
+            @if (password?.invalid && password?.touched) {
+              <div class="invalid-feedback d-block">
+                @if (password?.errors?.['required']) {
+                  Password is required
+                } @else if (password?.errors?.['minlength']) {
+                  Password must be at least 8 characters long
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Submit Button -->
+          <div class="d-grid mb-3">
+            <button
+              type="submit"
+              class="btn btn-primary btn-lg"
+              [disabled]="loginForm.invalid || isLoading"
+            >
+              @if (isLoading) {
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              } @else {
+                <i class="bi bi-box-arrow-in-right me-2"></i>
+              }
+              Sign In
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

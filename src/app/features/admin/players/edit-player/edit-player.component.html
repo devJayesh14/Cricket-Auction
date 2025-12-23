@@ -1,0 +1,181 @@
+<div class="edit-player-container min-vh-100 bg-light">
+  <app-header></app-header>
+
+  <div class="container-fluid py-5">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1 class="h2 fw-bold mb-2">Edit Player</h1>
+          <p class="text-muted mb-0">Update player information</p>
+        </div>
+        <button class="btn btn-outline-secondary" (click)="router.navigate(['/admin/players/list'])">
+          <i class="bi bi-arrow-left me-2"></i>Back to Players
+        </button>
+      </div>
+
+      <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white">
+          <h2 class="h4 mb-0 fw-bold">Player Information</h2>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+          @if (isLoading && !playerForm.value.name) {
+            <div class="text-center py-5">
+              <div class="spinner-border text-primary" role="status"></div>
+              <p class="text-muted mt-3">Loading player details...</p>
+            </div>
+          } @else {
+            <form [formGroup]="playerForm" (ngSubmit)="onSubmit()">
+              <div class="row g-4">
+                <!-- Player Name -->
+                <div class="col-12">
+                  <label for="name" class="form-label fw-semibold">
+                    Player Name <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input
+                      id="name"
+                      type="text"
+                      formControlName="name"
+                      placeholder="Enter player full name"
+                      class="form-control"
+                      [class.is-invalid]="name?.invalid && name?.touched"
+                    />
+                  </div>
+                  @if (name?.invalid && name?.touched) {
+                    <div class="invalid-feedback d-block">
+                      @if (name?.errors?.['required']) {
+                        Player name is required
+                      } @else if (name?.errors?.['minlength']) {
+                        Name must be at least 2 characters
+                      }
+                    </div>
+                  }
+                </div>
+
+                <!-- Age -->
+                <div class="col-12 col-md-6">
+                  <label for="age" class="form-label fw-semibold">
+                    Age <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    id="age"
+                    type="number"
+                    formControlName="age"
+                    placeholder="Enter age"
+                    min="16"
+                    max="50"
+                    class="form-control"
+                    [class.is-invalid]="age?.invalid && age?.touched"
+                  />
+                  @if (age?.invalid && age?.touched) {
+                    <div class="invalid-feedback d-block">Age must be between 16 and 50</div>
+                  }
+                </div>
+
+                <!-- Role -->
+                <div class="col-12 col-md-6">
+                  <label for="role" class="form-label fw-semibold">
+                    Role <span class="text-danger">*</span>
+                  </label>
+                  <select
+                    id="role"
+                    formControlName="role"
+                    class="form-select"
+                    [class.is-invalid]="role?.invalid && role?.touched"
+                  >
+                    <option value="">Select player role</option>
+                    @for (option of roleOptions; track option.value) {
+                      <option [value]="option.value">{{ option.label }}</option>
+                    }
+                  </select>
+                  @if (role?.invalid && role?.touched) {
+                    <div class="invalid-feedback d-block">Role is required</div>
+                  }
+                </div>
+
+
+                <!-- Base Price -->
+                <div class="col-12 col-md-6">
+                  <label for="basePrice" class="form-label fw-semibold">
+                    Base Price (₹) <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text">₹</span>
+                    <input
+                      id="basePrice"
+                      type="number"
+                      formControlName="basePrice"
+                      placeholder="Enter base price"
+                      min="100"
+                      step="50"
+                      class="form-control"
+                      [class.is-invalid]="basePrice?.invalid && basePrice?.touched"
+                    />
+                  </div>
+                  @if (basePrice?.invalid && basePrice?.touched) {
+                    <div class="invalid-feedback d-block">Base price is required</div>
+                  }
+                </div>
+
+                <!-- Photo Upload -->
+                <div class="col-12">
+                  <label class="form-label fw-semibold">Player Photo</label>
+                  <div class="d-flex flex-column flex-md-row gap-4 align-items-start">
+                    @if (previewUrl || existingPhotoUrl) {
+                      <div class="flex-shrink-0">
+                        <img 
+                          [src]="previewUrl || existingPhotoUrl" 
+                          alt="Preview" 
+                          class="img-thumbnail" 
+                          style="width: 128px; height: 128px; object-fit: cover;"
+                        />
+                      </div>
+                    }
+                    <div class="flex-grow-1 w-100">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        class="form-control"
+                        (change)="onFileSelect($event)"
+                      />
+                      <small class="form-text text-muted d-block mt-2">
+                        Maximum file size: 5MB. Supported formats: JPG, PNG, GIF
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Submit Buttons -->
+              <div class="d-flex flex-column flex-md-row gap-3 pt-4 mt-4 border-top">
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-lg flex-fill"
+                  [disabled]="playerForm.invalid || isLoading"
+                >
+                  @if (isLoading) {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  } @else {
+                    <i class="bi bi-check-circle me-2"></i>
+                  }
+                  Update Player
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-lg flex-fill"
+                  [disabled]="isLoading"
+                  (click)="router.navigate(['/admin/players/list'])"
+                >
+                  <i class="bi bi-x-circle me-2"></i>Cancel
+                </button>
+              </div>
+            </form>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
