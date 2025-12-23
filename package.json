@@ -6,8 +6,10 @@
     "start": "ng serve",
     "build": "ng build --configuration production",
     "build:prod": "ng build --configuration production",
+    "build:vercel": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "postinstall": "ng version"
   },
   "prettier": {
     "overrides": [

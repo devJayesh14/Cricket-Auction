@@ -1,8 +1,8 @@
 {
-  "buildCommand": "cd frontend/auction && npm ci && npm run build",
-  "outputDirectory": "frontend/auction/dist/auction",
-  "installCommand": "cd frontend/auction && npm ci",
-  "framework": null,
+  "buildCommand": "npm ci && npm run build",
+  "outputDirectory": "dist/auction",
+  "installCommand": "npm ci",
+  "framework": "angular",
   "rewrites": [
     {
       "source": "/(.*)",
