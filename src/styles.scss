@@ -1,0 +1,472 @@
+/* Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Custom PrimeNG Styles */
+.p-button {
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.p-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.p-button:hover::before {
+  left: 100%;
+}
+
+.p-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4), 0 0 20px rgba(118, 75, 162, 0.3);
+}
+
+.p-button-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.p-button-success {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  border: none;
+  box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+}
+
+.p-button-danger {
+  background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+  border: none;
+  box-shadow: 0 4px 15px rgba(235, 51, 73, 0.4);
+}
+
+.p-inputtext,
+.p-password input,
+.p-dropdown,
+.p-inputnumber input {
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.p-inputtext:focus,
+.p-password input:focus,
+.p-dropdown:focus,
+.p-inputnumber input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2), 0 0 20px rgba(118, 75, 162, 0.3);
+  transform: scale(1.01);
+}
+
+/* Form Validation Styles */
+.ng-invalid.ng-touched {
+  border-color: #e24c4c !important;
+}
+
+.ng-invalid.ng-touched:focus {
+  box-shadow: 0 0 0 3px rgba(226, 76, 76, 0.1) !important;
+}
+
+.ng-valid.ng-touched {
+  border-color: #10b981 !important;
+}
+
+.ng-valid.ng-touched:focus {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+}
+
+/* Card hover effects */
+.p-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.p-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3), 0 0 30px rgba(118, 75, 162, 0.2);
+  border-color: rgba(102, 126, 234, 0.5);
+}
+
+/* Input icon spacing */
+.p-input-icon-left > i {
+  left: 1rem;
+}
+
+.p-input-icon-left > input {
+  padding-left: 2.75rem;
+}
+
+/* PrimeNG Password component */
+.p-password {
+  width: 100%;
+}
+
+.p-password input {
+  padding-left: 2.75rem;
+}
+
+/* PrimeNG Dropdown */
+.p-dropdown {
+  width: 100%;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+/* Mobile-first responsive base */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent text selection on buttons for better mobile UX */
+.btn {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Mobile utility classes */
+@media (max-width: 768px) {
+  .d-mobile-none {
+    display: none !important;
+  }
+
+  .d-mobile-block {
+    display: block !important;
+  }
+
+  .d-mobile-flex {
+    display: flex !important;
+  }
+
+  .text-mobile-center {
+    text-align: center !important;
+  }
+
+  .w-mobile-100 {
+    width: 100% !important;
+  }
+
+  /* Hide scrollbars on mobile for cleaner look */
+  .table-responsive::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  /* Better form spacing on mobile */
+  .form-label {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Card mobile optimizations */
+  .card-header {
+    padding: 0.75rem 1rem !important;
+    font-size: 0.9rem;
+  }
+
+  .card-title {
+    font-size: 1rem !important;
+  }
+
+  /* Better alert spacing */
+  .alert {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Input group mobile */
+  .input-group-lg > .form-control,
+  .input-group-lg > .form-select {
+    font-size: 1rem;
+  }
+
+  /* Better badge sizing */
+  .badge {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.65rem;
+  }
+
+  /* Stack buttons vertically on mobile */
+  .btn-group-vertical-mobile {
+    flex-direction: column;
+  }
+
+  .btn-group-vertical-mobile > .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Better spacing for mobile */
+  .mb-mobile-3 {
+    margin-bottom: 1rem !important;
+  }
+
+  .mt-mobile-3 {
+    margin-top: 1rem !important;
+  }
+
+  .px-mobile-2 {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  .py-mobile-3 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+}
+
+/* Touch-friendly buttons for mobile */
+@media (max-width: 768px) {
+  .btn {
+    min-height: 44px; /* iOS recommended touch target */
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .btn-sm {
+    min-height: 36px;
+    padding: 0.5rem 1rem;
+  }
+
+  .btn-lg {
+    min-height: 52px;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+  }
+
+  /* Larger touch targets for form inputs */
+  .form-control,
+  .form-select {
+    min-height: 44px;
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 0.75rem 1rem;
+  }
+
+  /* Card spacing on mobile */
+  .card {
+    margin-bottom: 1rem;
+    border-radius: 12px;
+  }
+
+  .card-body {
+    padding: 1rem !important;
+  }
+
+  /* Table responsive wrapper */
+  .table-responsive {
+    border-radius: 12px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Smaller headings on mobile */
+  h1 { font-size: 1.75rem !important; }
+  h2 { font-size: 1.5rem !important; }
+  h3 { font-size: 1.25rem !important; }
+  h4 { font-size: 1.1rem !important; }
+  h5 { font-size: 1rem !important; }
+
+  /* Container padding */
+  .container-fluid {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  /* Better spacing for mobile */
+  .py-5 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  .mb-4 {
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* Stack columns on mobile */
+  .row > [class*="col-"] {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  box-shadow: 0 0 15px rgba(118, 75, 162, 0.7);
+}
+
+/* Toast positioning */
+.p-toast {
+  z-index: 1100;
+}
+
+/* Loading spinner */
+.pi-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Futuristic Glow Effects */
+.glow-effect {
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.5), 0 0 40px rgba(118, 75, 162, 0.3);
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.5), 0 0 40px rgba(118, 75, 162, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(102, 126, 234, 0.8), 0 0 60px rgba(118, 75, 162, 0.5);
+  }
+}
+
+/* Neon Text Effect */
+.neon-text {
+  color: #fff;
+  text-shadow: 
+    0 0 10px rgba(102, 126, 234, 0.8),
+    0 0 20px rgba(102, 126, 234, 0.6),
+    0 0 30px rgba(118, 75, 162, 0.4),
+    0 0 40px rgba(118, 75, 162, 0.2);
+  animation: neonFlicker 3s ease-in-out infinite;
+}
+
+@keyframes neonFlicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.9; }
+}
+
+/* Glass Morphism Effect */
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+/* Animated Background Particles */
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  animation: float 20s infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(100px);
+    opacity: 0;
+  }
+}
