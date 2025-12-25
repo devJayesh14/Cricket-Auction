@@ -321,17 +321,40 @@ export class SocketService {
    */
   onAuctionEnded(): Observable<any> {
     return new Observable(observer => {
-      if (!this.socket) {
-        this.connect();
-      }
-
       const handler = (data: any) => {
+        console.log('SocketService: auction:ended event received', data);
         observer.next(data);
       };
 
-      this.socket?.on('auction:ended', handler);
+      // Ensure socket is connected
+      if (!this.socket || !this.connected) {
+        this.connect();
+        // Wait for connection before setting up listener
+        const connectHandler = () => {
+          console.log('SocketService: Socket connected, setting up auction:ended listener');
+          if (this.socket) {
+            this.socket.on('auction:ended', handler);
+            this.socket.off('connect', connectHandler);
+          }
+        };
+        if (this.socket) {
+          if (this.socket.connected) {
+            // Already connected, set up listener immediately
+            console.log('SocketService: Socket already connected, setting up auction:ended listener');
+            this.socket.on('auction:ended', handler);
+          } else {
+            // Wait for connection
+            this.socket.once('connect', connectHandler);
+          }
+        }
+      } else {
+        // Socket is already connected, set up listener immediately
+        console.log('SocketService: Setting up auction:ended listener (socket already connected)');
+        this.socket.on('auction:ended', handler);
+      }
 
       return () => {
+        console.log('SocketService: Cleaning up auction:ended listener');
         this.socket?.off('auction:ended', handler);
       };
     });

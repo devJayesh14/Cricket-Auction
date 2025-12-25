@@ -253,7 +253,7 @@
                   <div class="col-12 col-md-4 text-center">
                     @if (currentPlayer.photo) {
                       <img 
-                        [src]="'http://localhost:3000/' + currentPlayer.photo" 
+                        [src]="imageService.getPhotoUrl(currentPlayer.photo)" 
                         [alt]="currentPlayer.name"
                         class="img-fluid rounded shadow-sm mb-3"
                         style="max-height: 300px; object-fit: cover;"

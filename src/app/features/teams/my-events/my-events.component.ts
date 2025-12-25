@@ -5,7 +5,7 @@ import { TeamService } from '../../../core/services/team.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
-import { environment } from '../../../../environments/environment';
+import { ImageService } from '../../../core/services/image.service';
 
 interface TeamEvent {
   _id: string;
@@ -41,7 +41,8 @@ export class MyEventsComponent implements OnInit {
     private teamService: TeamService,
     private authService: AuthService,
     public router: Router,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    public imageService: ImageService
   ) {
     this.currentUser = this.authService.currentUserValue;
   }
@@ -77,7 +78,18 @@ export class MyEventsComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         if (response.success && response.data) {
-          this.events = response.data;
+          // Update event status locally if all players are sold
+          this.events = response.data.map((event: TeamEvent) => {
+            if (event.status === 'live' && event.stats) {
+              const totalPlayers = event.stats.totalPlayers || 0;
+              const playersSold = event.stats.playersSold || 0;
+              // If all players are sold, mark as completed
+              if (totalPlayers > 0 && playersSold >= totalPlayers) {
+                return { ...event, status: 'completed' };
+              }
+            }
+            return event;
+          });
         }
       },
       error: (error) => {
@@ -163,6 +175,15 @@ export class MyEventsComponent implements OnInit {
   }
 
   viewEvent(eventId: string): void {
+    // Find the event to check its status
+    const event = this.events.find(e => e._id === eventId);
+    
+    // Don't allow joining completed events
+    if (event && event.status === 'completed') {
+      this.notificationService.info('This auction has been completed. All players have been sold.');
+      return;
+    }
+    
     this.router.navigate([`/events/${eventId}/live`]);
   }
 
@@ -171,22 +192,11 @@ export class MyEventsComponent implements OnInit {
   }
 
   getLogoUrl(logoPath: string | null | undefined): string {
-    if (!logoPath) {
-      return '/assets/default-team-logo.png';
-    }
-    
-    // If already a full URL, return as is
-    if (logoPath.startsWith('http')) {
-      return logoPath;
-    }
-    
-    // Construct URL from environment
-    const apiUrl = environment.apiUrl || 'http://localhost:3000/api';
-    const baseUrl = apiUrl.replace('/api', '');
-    
-    // Ensure logoPath starts with /
-    const path = logoPath.startsWith('/') ? logoPath : `/${logoPath}`;
-    return `${baseUrl}${path}`;
+    return this.imageService.getLogoUrl(logoPath);
+  }
+
+  getPhotoUrl(photoPath: string | null | undefined): string {
+    return this.imageService.getPhotoUrl(photoPath);
   }
 
   onImageError(event: any): void {

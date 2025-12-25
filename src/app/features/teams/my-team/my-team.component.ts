@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TeamService } from '../../../core/services/team.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { ImageService } from '../../../core/services/image.service';
 import { Player } from '../../../core/models/player.model';
 import { Team } from '../../../core/models/team.model';
-import { environment } from '../../../../environments/environment';
 
 interface EventWisePlayer {
   _id: string;
@@ -47,7 +47,8 @@ export class MyTeamComponent implements OnInit {
   constructor(
     private teamService: TeamService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    public imageService: ImageService
   ) {
     this.currentUser = this.authService.currentUserValue;
   }
@@ -131,22 +132,11 @@ export class MyTeamComponent implements OnInit {
   }
 
   getLogoUrl(logoPath: string | null | undefined): string {
-    if (!logoPath) {
-      return '/assets/default-team-logo.png';
-    }
-    
-    // If already a full URL, return as is
-    if (logoPath.startsWith('http')) {
-      return logoPath;
-    }
-    
-    // Construct URL from environment
-    const apiUrl = environment.apiUrl || 'http://localhost:3000/api';
-    const baseUrl = apiUrl.replace('/api', '');
-    
-    // Ensure logoPath starts with /
-    const path = logoPath.startsWith('/') ? logoPath : `/${logoPath}`;
-    return `${baseUrl}${path}`;
+    return this.imageService.getLogoUrl(logoPath);
+  }
+
+  getPhotoUrl(photoPath: string | null | undefined): string {
+    return this.imageService.getPhotoUrl(photoPath);
   }
 
   onImageError(event: any): void {

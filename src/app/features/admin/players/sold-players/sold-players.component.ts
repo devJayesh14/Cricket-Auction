@@ -5,7 +5,7 @@ import { EventService } from '../../../../core/services/event.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
-import { environment } from '../../../../../environments/environment';
+import { ImageService } from '../../../../core/services/image.service';
 
 interface SoldPlayer {
   _id: string;
@@ -50,7 +50,6 @@ export class SoldPlayersComponent implements OnInit {
   soldPlayers: SoldPlayer[] = [];
   teamGroups: TeamGroup[] = [];
   isLoading = false;
-  baseUrl = environment.apiUrl?.replace('/api', '') || 'http://localhost:3000';
   eventId: string | null = null;
   eventName: string = '';
 
@@ -59,7 +58,8 @@ export class SoldPlayersComponent implements OnInit {
     public authService: AuthService,
     public router: Router,
     private route: ActivatedRoute,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    public imageService: ImageService
   ) {}
 
   ngOnInit(): void {

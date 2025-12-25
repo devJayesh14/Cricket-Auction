@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, ActivatedRoute } from '@angular/router';
 import { PlayerService } from '../../../../core/services/player.service';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { ImageService } from '../../../../core/services/image.service';
 import { Player } from '../../../../core/models/player.model';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
 
@@ -25,7 +26,6 @@ export class EditPlayerComponent implements OnInit {
   previewUrl: string | null = null;
   playerId: string | null = null;
   existingPhotoUrl: string | null = null;
-  baseUrl = 'http://localhost:3000';
 
   roleOptions = [
     { label: 'Batsman', value: 'batsman' },
@@ -41,7 +41,8 @@ export class EditPlayerComponent implements OnInit {
     private playerService: PlayerService,
     public router: Router,
     private route: ActivatedRoute,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private imageService: ImageService
   ) {
     this.playerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
@@ -72,7 +73,7 @@ export class EditPlayerComponent implements OnInit {
           basePrice: player.basePrice
         });
         if (player.photo) {
-          this.existingPhotoUrl = this.baseUrl + '/' + player.photo;
+          this.existingPhotoUrl = this.imageService.getPhotoUrl(player.photo);
         }
         this.isLoading = false;
       },

@@ -10,6 +10,7 @@ import { TeamService } from '../../../core/services/team.service';
 import { SocketService } from '../../../core/services/socket.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { ConfirmationService } from '../../../core/services/confirmation.service';
+import { ImageService } from '../../../core/services/image.service';
 import { AuctionEvent } from '../../../core/models/event.model';
 import { Player } from '../../../core/models/player.model';
 import { interval, Subscription } from 'rxjs';
@@ -82,7 +83,8 @@ export class LiveAuctionComponent implements OnInit, OnDestroy {
     private teamService: TeamService,
     private socketService: SocketService,
     private notificationService: NotificationService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    public imageService: ImageService
   ) {
     this.currentUser = this.authService.currentUserValue;
     
@@ -286,14 +288,27 @@ export class LiveAuctionComponent implements OnInit, OnDestroy {
     });
 
     // Listen for auction ended events (show to all users)
-    this.auctionEndedSubscription = this.socketService.onAuctionEnded().subscribe((data: any) => {
-      console.log('Auction ended event received:', data);
-      // Show thank you animation to all users
-      this.auctionEndedData = data;
-      this.showThankYouAnimation = true;
-      // Update event status
-      if (this.event) {
-        this.event.status = 'completed';
+    console.log('Setting up auction:ended subscription...');
+    this.auctionEndedSubscription = this.socketService.onAuctionEnded().subscribe({
+      next: (data: any) => {
+        console.log('✅ LiveAuctionComponent: Auction ended event received:', data);
+        // Show thank you animation to all users
+        this.auctionEndedData = data;
+        this.showThankYouAnimation = true;
+        console.log('✅ showThankYouAnimation set to:', this.showThankYouAnimation);
+        // Update event status
+        if (this.event) {
+          this.event.status = 'completed';
+        }
+        // Stop timers and subscriptions
+        this.countdownSubscription?.unsubscribe();
+        this.playerTimerSubscription?.unsubscribe();
+      },
+      error: (error: any) => {
+        console.error('❌ Error in auction:ended subscription:', error);
+      },
+      complete: () => {
+        console.log('Auction ended subscription completed');
       }
     });
 

@@ -7,6 +7,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
 import { ConfirmationService } from '../../../../core/services/confirmation.service';
 import { Player } from '../../../../core/models/player.model';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
+import { ImageService } from '../../../../core/services/image.service';
 
 @Component({
   selector: 'app-list-players',
@@ -24,7 +25,8 @@ export class ListPlayersComponent implements OnInit {
     public authService: AuthService,
     public router: Router,
     private notificationService: NotificationService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    public imageService: ImageService
   ) {}
 
   ngOnInit(): void {

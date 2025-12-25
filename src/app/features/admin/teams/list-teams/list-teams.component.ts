@@ -7,7 +7,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
 import { ConfirmationService } from '../../../../core/services/confirmation.service';
 import { Team } from '../../../../core/models/team.model';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
-import { environment } from '../../../../../environments/environment';
+import { ImageService } from '../../../../core/services/image.service';
 
 @Component({
   selector: 'app-list-teams',
@@ -19,14 +19,14 @@ import { environment } from '../../../../../environments/environment';
 export class ListTeamsComponent implements OnInit {
   teams: Team[] = [];
   isLoading = false;
-  baseUrl = environment.apiUrl.replace('/api', '') || 'http://localhost:3000';
 
   constructor(
     private teamService: TeamService,
     public authService: AuthService,
     public router: Router,
     private notificationService: NotificationService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    public imageService: ImageService
   ) {}
 
   ngOnInit(): void {
@@ -89,22 +89,8 @@ export class ListTeamsComponent implements OnInit {
     return `₹${amount.toLocaleString('en-IN')}`;
   }
 
-  getLogoUrl(logoPath: string): string {
-    if (!logoPath) return '';
-    // If logo path already starts with http, return as is
-    if (logoPath.startsWith('http://') || logoPath.startsWith('https://')) {
-      return logoPath;
-    }
-    // If logo path starts with /uploads, just prepend baseUrl
-    if (logoPath.startsWith('/uploads')) {
-      return this.baseUrl + logoPath;
-    }
-    // If logo path starts with uploads (without /), add /
-    if (logoPath.startsWith('uploads')) {
-      return this.baseUrl + '/' + logoPath;
-    }
-    // Otherwise, assume it's a relative path and prepend /uploads/teams/
-    return this.baseUrl + '/uploads/teams/' + logoPath;
+  getLogoUrl(logoPath: string | null | undefined): string {
+    return this.imageService.getLogoUrl(logoPath);
   }
 
   onImageError(event: any): void {

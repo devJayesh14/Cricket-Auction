@@ -3,6 +3,3 @@ export const environment = {
   apiUrl: 'https://cricket-auction-backend-pied.vercel.app/api'
 };
 
-
-
-

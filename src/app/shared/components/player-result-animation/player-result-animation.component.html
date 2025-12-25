@@ -18,7 +18,7 @@
             <div class="player-section">
               @if (soldData.player.photo) {
                 <img 
-                  [src]="'http://localhost:3000/' + soldData.player.photo" 
+                  [src]="imageService.getPhotoUrl(soldData.player.photo)" 
                   [alt]="soldData.player.name"
                   class="player-image"
                 />
@@ -44,7 +44,7 @@
             <div class="team-section">
               @if (soldData.team.logo) {
                 <img 
-                  [src]="'http://localhost:3000/' + soldData.team.logo" 
+                  [src]="imageService.getLogoUrl(soldData.team.logo)" 
                   [alt]="soldData.team.name"
                   class="team-logo"
                 />
@@ -59,7 +59,7 @@
                 <div class="owner-info">
                   @if (soldData.owner.photo) {
                     <img 
-                      [src]="'http://localhost:3000/' + soldData.owner.photo" 
+                      [src]="imageService.getPhotoUrl(soldData.owner.photo)" 
                       [alt]="soldData.owner.name"
                       class="owner-image"
                     />
@@ -91,7 +91,7 @@
             <div class="player-section">
               @if (unsoldData.player.photo) {
                 <img 
-                  [src]="'http://localhost:3000/' + unsoldData.player.photo" 
+                  [src]="imageService.getPhotoUrl(unsoldData.player.photo)" 
                   [alt]="unsoldData.player.name"
                   class="player-image"
                 />

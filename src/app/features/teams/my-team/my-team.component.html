@@ -145,7 +145,7 @@
                         <div class="player-card">
                           @if (player.photo) {
                             <img 
-                              [src]="getLogoUrl(player.photo)" 
+                              [src]="getPhotoUrl(player.photo)" 
                               [alt]="player.name"
                               class="player-photo"
                               (error)="onImageError($event)"
@@ -201,7 +201,7 @@
                     <div class="player-card">
                       @if (player.photo) {
                         <img 
-                          [src]="getLogoUrl(player.photo)" 
+                          [src]="getPhotoUrl(player.photo)" 
                           [alt]="player.name"
                           class="player-photo"
                           (error)="onImageError($event)"

@@ -4,9 +4,9 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, ActivatedRoute } from '@angular/router';
 import { TeamService } from '../../../../core/services/team.service';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { ImageService } from '../../../../core/services/image.service';
 import { Team, CreateTeamRequest } from '../../../../core/models/team.model';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
-import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-create-team',
@@ -27,14 +27,14 @@ export class CreateTeamComponent implements OnInit {
   isEditMode = false;
   teamId: string | null = null;
   existingLogoUrl: string | null = null;
-  baseUrl = 'http://localhost:3000';
 
   constructor(
     private fb: FormBuilder,
     private teamService: TeamService,
     public router: Router,
     private route: ActivatedRoute,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private imageService: ImageService
   ) {
     this.teamForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
@@ -64,7 +64,7 @@ export class CreateTeamComponent implements OnInit {
           budget: team.budget
         });
         if (team.logo) {
-          this.existingLogoUrl = this.baseUrl + '/' + team.logo;
+          this.existingLogoUrl = this.imageService.getLogoUrl(team.logo);
         }
         this.isLoading = false;
       },

@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ImageService } from '../../../core/services/image.service';
 
 export interface PlayerSoldData {
   player: {
@@ -48,6 +49,8 @@ export class PlayerResultAnimationComponent implements OnDestroy, OnChanges {
   
   showAnimation = false;
   private animationTimeout?: ReturnType<typeof setTimeout>;
+
+  constructor(public imageService: ImageService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     // Only show if there's actual data
