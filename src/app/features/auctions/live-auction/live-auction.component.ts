@@ -120,29 +120,28 @@ export class LiveAuctionComponent implements OnInit, OnDestroy {
     // Set loading state
     this.isLoading = true;
     
-    // Connect to socket first
-    this.socketService.connect();
-    
-    // Setup socket listeners before joining
+    // Setup socket listeners first (they will handle connection internally)
     this.setupSocketListeners();
     
-    // Wait a bit for socket connection, then join auction room
-    setTimeout(() => {
+    // Connect to socket and wait for connection before joining
+    this.socketService.connect();
+    
+    // Wait for socket connection, then join auction room
+    const attemptJoin = (retries = 0) => {
       if (this.socketService.isConnected()) {
         this.socketService.joinAuction(this.eventId);
+      } else if (retries < 5) {
+        // Wait a bit and retry (Socket.io is connecting)
+        setTimeout(() => attemptJoin(retries + 1), 1000);
       } else {
-        // Retry connection
-        this.socketService.connect();
-        setTimeout(() => {
-          if (this.socketService.isConnected()) {
-            this.socketService.joinAuction(this.eventId);
-          } else {
-            this.isLoading = false;
-            this.notificationService.error('Failed to connect to auction server. Please try again.');
-          }
-        }, 2000);
+        // Connection failed after multiple attempts
+        this.isLoading = false;
+        this.notificationService.error('Failed to connect to auction server. Please refresh the page.');
       }
-    }, 500);
+    };
+    
+    // Start attempting to join after a short delay
+    setTimeout(() => attemptJoin(), 500);
     
     // Timeout fallback - if no response after 10 seconds, show error
     setTimeout(() => {
