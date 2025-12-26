@@ -52,6 +52,12 @@ export class SocketService {
       // Extract base URL from API URL (remove /api)
       const apiUrl = environment.apiUrl || 'http://localhost:3000/api';
       socketUrl = apiUrl.replace('/api', '') || 'http://localhost:3000';
+      
+      // Warn if trying to use Vercel backend for Socket.io (won't work)
+      if (socketUrl.includes('vercel.app')) {
+        console.warn('⚠️ Socket.io cannot work on Vercel serverless. Please deploy socket-server.js separately and set socketUrl in environment.ts');
+        console.warn('📖 See SOCKET_SERVER_DEPLOYMENT.md for deployment instructions');
+      }
     }
     
     // If socket exists but not connected, disconnect it first
