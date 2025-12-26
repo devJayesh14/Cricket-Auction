@@ -306,6 +306,11 @@ export class LiveAuctionComponent implements OnInit, OnDestroy {
       },
       error: (error: any) => {
         console.error('❌ Error in auction:ended subscription:', error);
+        // Don't show error to user if it's just a connection issue
+        // The connection will retry automatically
+        if (error?.message && !error.message.includes('Socket connection failed')) {
+          console.warn('Auction ended subscription error (non-critical):', error);
+        }
       },
       complete: () => {
         console.log('Auction ended subscription completed');
