@@ -44,9 +44,15 @@ export class SocketService {
     this.connecting = true;
     this.connectionRetries++;
 
-    // Extract base URL from API URL (remove /api)
-    const apiUrl = environment.apiUrl || 'http://localhost:3000/api';
-    const socketUrl = apiUrl.replace('/api', '') || 'http://localhost:3000';
+    // Use separate socket server URL if provided, otherwise derive from API URL
+    let socketUrl: string;
+    if (environment.socketUrl) {
+      socketUrl = environment.socketUrl;
+    } else {
+      // Extract base URL from API URL (remove /api)
+      const apiUrl = environment.apiUrl || 'http://localhost:3000/api';
+      socketUrl = apiUrl.replace('/api', '') || 'http://localhost:3000';
+    }
     
     // If socket exists but not connected, disconnect it first
     if (this.socket && !this.socket.connected) {
